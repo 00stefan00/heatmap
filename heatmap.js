@@ -8,6 +8,7 @@ var heatLayer;
 function initialize() {
     var map = getMap(getMapOptions());
     heatLayer = getNewHeatLayer(map);
+    getController();
 }
 
 function getMapOptions() {
@@ -23,6 +24,17 @@ function getMapOptions() {
 
 function getMap() {
     return new google.maps.Map(document.getElementById("map-canvas"), getMapOptions());
+}
+
+function getController(){
+    var btn = document.createElement("Left_Button");
+    var t = document.createTextNode("<");
+    btn.appendChild(t);
+    document.body.appendChild(btn)
+    var btn = document.createElement("Right_Button");
+    var t = document.createTextNode(">");
+    btn.appendChild(t);
+    document.body.appendChild(btn)
 }
 
 function getNewHeatLayer(map) {
@@ -43,7 +55,7 @@ function createHeatLayer(map, data){
             "scaleRadius": true,
             // "radius": 50,
             // "scaleRadius": false,
-            "maxOpacity": 25,
+            "maxOpacity": 60,
             "useLocalExtrema": false,
             latField: 'lat',
             lngField: 'lon',
