@@ -4,20 +4,20 @@
 //
 //
 var heatLayerData = [];
-var map;
-var heatLayer;
+
 
 function initialize() {
-    map = getMap(getMapOptions());
+    var map = getMap(getMapOptions());
     google.maps.event.addListener(map, 'idle', onIdle);
     addHeatLayerData(triggers_hoogeveen);
     addHeatLayerData(triggers_hoogkerk);
+
+    getNewHeatLayer(map);
     //getController();
 }
-    
 
 function onIdle(){
-    getNewHeatLayer(map);
+    //alert("idle");
 }
 
 function getMapOptions() {
@@ -27,7 +27,7 @@ function getMapOptions() {
 
     var mapOptions = {
             center: hoogkerk,
-            zoom: 14,
+            zoom: 17,
             minZoom: 14,
             maxZoom: 20,
             mapTypeId: google.maps.MapTypeId.HYBRID
@@ -55,7 +55,7 @@ function getNewHeatLayer(map, data) {
     
 
 function createHeatLayer(map, data){
-    heatLayer = new HeatmapOverlay(map,
+    heatmap = new HeatmapOverlay(map,
         {
             "radius": 0.00020,
             "scaleRadius": true,
@@ -67,13 +67,12 @@ function createHeatLayer(map, data){
         }
     );
 
-    heatLayer.setData(data);
+    heatmap.setData(data);
+    return heatmap;
 }
 
 function addHeatLayerData(data){
-    for (var i = 0; i < data.length; i++) {
-        heatLayerData.push(data[i]);
-    };
+    heatLayerData.push(data);
 }
 
 function getData(json) {
