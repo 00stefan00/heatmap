@@ -16,28 +16,40 @@
 
         #map-canvas {
             height: 100%;
-            width: 80%
+            width: 100%
         }
-        #controll-canvas {
-            height: 100%;
-            width: 20%
+        #panel {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            margin-left: -180px;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
         }
+
     </style>
     <script src="file://C:\\Users\\Stefan Strijker\\workspace\\javascript\\heatmap\\data\\triggers_hoogeveen.json"></script>
     <script src="file://C:\\Users\\Stefan Strijker\\workspace\\javascript\\heatmap\\data\\triggers_hoogkerk.json"></script>
     <script src="file://C:\\Users\\Stefan Strijker\\workspace\\javascript\\heatmap\\data\\triggers_nijmegen.json"></script>
 
+
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCoUUkm6sydrHUYsQd1lpigDekWGHKgTc">
-    </script>
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script src='scripts/heatmap.js-2.0.js'></script>
-    <script src='scripts/gmaps-heatmap.js'></script>
+  src="https://maps.googleapis.com/maps/api/js?libraries=visualization">
+</script>
+
     <script src='heatmap.js'></script>
 
 </head>
 <body>
-<div id="map-canvas"/>
-<div id="controll-canvas"/>
+    <div id="panel">
+      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
+      <button onclick="changeGradient()">Change gradient</button>
+      <button onclick="changeRadius()">Change radius</button>
+      <button onclick="changeOpacity()">Change opacity</button>
+    </div>
+
+    <div id="map-canvas"/>
 </body>
 </html>
