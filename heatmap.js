@@ -2,7 +2,16 @@
 
 var map, pointArray, heatmap;
 
-var heatMapData = [];
+var heatMapData;
+var heatMapSettings = {
+    radius: null
+};
+var mapBounds = {
+    longitudeLow: null,
+    longitudeHigh: null,
+    latitudeLow: null,
+    latitudeHigh: null
+}
 
 function initialize() {
     var hoogeveen = new google.maps.LatLng(52.73400225036641, 6.47296751087904);
@@ -17,11 +26,28 @@ function initialize() {
 
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-    console.log("nijmegen");
+    google.maps.event.addListener(map, 'dragend', mapViewChanged);
+    google.maps.event.addListener(map, 'zoom_changed', mapViewChanged);
+
+    // heatMapInit();
+}
+
+function heatMapInit(){    
+    heatMapData = []
+
+    if (heatmap != undefined) {
+        heatmap.setMap(null);
+    }
+    check_bounds();
+
+    console.log("2nd");
+    mapBounds.latitudeLow = map.getBounds().va.j;
+    mapBounds.latitudeHigh = map.getBounds().va.k;
+    mapBounds.longitudeLow = map.getBounds().Ea.k;
+    mapBounds.longitudeHigh = map.getBounds().Ea.j;
+
     generateHeatMapData(triggers_nijmegen);
-    console.log("hoogeveen");
     generateHeatMapData(triggers_hoogeveen);
-    console.log("hoogkerk");
     generateHeatMapData(triggers_hoogkerk);
 
     pointArray = new google.maps.MVCArray(heatMapData);
@@ -31,20 +57,40 @@ function initialize() {
     });
 
     heatmap.setMap(map);
+    heatmap.set('radius', heatMapSettings.radius);
 }
+
+function check_bounds(){
+
+        var ok = true;
+
+        if (map.getBounds() === undefined)
+            ok = false;
+
+        if (! ok) 
+            setTimeout(check_bounds, 100);
+        else {
+             console.log("first");
+             
+             return
+        }   
+    }
 
 function generateHeatMapData(json) {
     var median = getMedian(json);
 
     for (i = 0; i < json.length-1; i++){
-        
-        longitude = json[i].lat
-        latitude = json[i].lon
-        triggers_per_hour = json[i].triggers
-        if(triggers_per_hour > median*8) {
-            console.log(triggers_per_hour + " > " + median*8);
-            triggers_per_hour = median*8;
+          //  console.log(mapBounds.longitudeLow + " < " + json[i].lon + " < " + mapBounds.longitudeHigh + " && " + mapBounds.latitudeLow  + " < " + json[i].lon + " < " + mapBounds.latitudeHigh)
 
+        if(!((mapBounds.longitudeLow < json[i].lon && json[i].lon < mapBounds.longitudeHigh) && (mapBounds.latitudeLow < json[i].lat && json[i].lat < mapBounds.latitudeHigh))){
+            console.log("skipped");
+            continue;
+        }
+        longitude = json[i].lat;
+        latitude = json[i].lon;
+        triggers_per_hour = json[i].triggers;
+        if(triggers_per_hour > median*7) {
+            triggers_per_hour = median*7;
         }
 
         var dataObject = {
@@ -62,6 +108,10 @@ function getMedian(json) {
      }
      data = data.sort(function(a, b){return a-b});
      return data[Math.round(json.length/2)];
+}
+
+function mapViewChanged() {
+    heatMapInit();
 }
 
 function toggleHeatmap() {
@@ -89,7 +139,6 @@ function changeGradient() {
 }
 
 function getRadius(value, change) {
-    console.log(">" + value);
     if(value == undefined){
         value = null;
     }
@@ -105,22 +154,20 @@ function getRadius(value, change) {
     var i = radius.indexOf(value) + change;
     
     if(i >= 0 && i <= radius.length-1){
-        console.log(radius[i]);
-
+        heatMapSettings.radius = radius[i];
         return radius[i];
     }
     else{
-        console.log(value);
 
         return value;
     }
 }
 
-function changeRadius() {
+function increaseRadius() {
   heatmap.set('radius', getRadius(heatmap.get('radius'), 1));
 }
 
-function changeOpacity() {
+function decreaseRadius() {
   heatmap.set('radius', getRadius(heatmap.get('radius'), -1));
 }
 
