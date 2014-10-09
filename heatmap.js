@@ -38,13 +38,12 @@ function heatMapInit(){
     if (heatmap != undefined) {
         heatmap.setMap(null);
     }
-    check_bounds();
-
-    console.log("2nd");
-    mapBounds.latitudeLow = map.getBounds().va.j;
-    mapBounds.latitudeHigh = map.getBounds().va.k;
-    mapBounds.longitudeLow = map.getBounds().Ea.k;
-    mapBounds.longitudeHigh = map.getBounds().Ea.j;
+    if(map.getBounds() != undefined){
+        mapBounds.latitudeLow = map.getBounds().va.j;
+        mapBounds.latitudeHigh = map.getBounds().va.k;
+        mapBounds.longitudeLow = map.getBounds().Ea.k;
+        mapBounds.longitudeHigh = map.getBounds().Ea.j;
+    }
 
     generateHeatMapData(triggers_nijmegen);
     generateHeatMapData(triggers_hoogeveen);
@@ -57,11 +56,13 @@ function heatMapInit(){
     });
 
     heatmap.setMap(map);
+    if(heatMapSettings.radius == null){
+        heatMapSettings.radius = (document.getElementById("radiusSlider").value)*1
+    }
     heatmap.set('radius', heatMapSettings.radius);
 }
 
 function check_bounds(){
-
         var ok = true;
 
         if (map.getBounds() === undefined)
@@ -70,8 +71,6 @@ function check_bounds(){
         if (! ok) 
             setTimeout(check_bounds, 100);
         else {
-             console.log("first");
-             
              return
         }   
     }
@@ -83,7 +82,7 @@ function generateHeatMapData(json) {
           //  console.log(mapBounds.longitudeLow + " < " + json[i].lon + " < " + mapBounds.longitudeHigh + " && " + mapBounds.latitudeLow  + " < " + json[i].lon + " < " + mapBounds.latitudeHigh)
 
         if(!((mapBounds.longitudeLow < json[i].lon && json[i].lon < mapBounds.longitudeHigh) && (mapBounds.latitudeLow < json[i].lat && json[i].lat < mapBounds.latitudeHigh))){
-            console.log("skipped");
+            
             continue;
         }
         longitude = json[i].lat;
@@ -138,37 +137,9 @@ function changeGradient() {
   heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
 }
 
-function getRadius(value, change) {
-    if(value == undefined){
-        value = null;
-    }
-    var radius = [
-        5,
-        null,
-        20,
-        40,
-        60,
-        80,
-        100
-    ];
-    var i = radius.indexOf(value) + change;
-    
-    if(i >= 0 && i <= radius.length-1){
-        heatMapSettings.radius = radius[i];
-        return radius[i];
-    }
-    else{
-
-        return value;
-    }
-}
-
-function increaseRadius() {
-  heatmap.set('radius', getRadius(heatmap.get('radius'), 1));
-}
-
-function decreaseRadius() {
-  heatmap.set('radius', getRadius(heatmap.get('radius'), -1));
+function changeRadius(r) {
+      heatmap.set('radius', r*1);
+      heatMapSettings.radius = r*1;
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

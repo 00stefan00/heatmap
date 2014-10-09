@@ -3,33 +3,7 @@
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" type="text/css" href="heatmap.css">
-    <style type="text/css">
-        html {
-            height: 100%
-        }
-
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0
-        }
-
-        #map-canvas {
-            height: 100%;
-            width: 100%
-        }
-        #panel {
-            position: absolute;
-            top: 5px;
-            left: 50%;
-            margin-left: -180px;
-            z-index: 5;
-            background-color: #fff;
-            padding: 5px;
-            border: 1px solid #999;
-        }
-
-    </style>
+    
     <script src="file://C:\\Users\\Stefan Strijker\\workspace\\javascript\\heatmap\\data\\triggers_hoogeveen.json"></script>
     <script src="file://C:\\Users\\Stefan Strijker\\workspace\\javascript\\heatmap\\data\\triggers_hoogkerk.json"></script>
     <script src="file://C:\\Users\\Stefan Strijker\\workspace\\javascript\\heatmap\\data\\triggers_nijmegen.json"></script>
@@ -46,8 +20,9 @@
     <div id="panel">
       <button onclick="toggleHeatmap()">Show/Hide Heatmap</button>
       <button onclick="changeGradient()">Change colors</button>
-      <button onclick="increaseRadius()">Increase radius</button>
-      <button onclick="decreaseRadius()">Decrease radius</button>
+<!--      <button onclick="increaseRadius()">Increase Intensity</button> -->
+<!--      <button onclick="decreaseRadius()">Decrease Intensity</button> -->
+      <input type="range" id="radiusSlider" onchange="changeRadius(radiusSlider.value)"  min="5" max="100" step="5" value="25">
     </div>
 
     <div id="map-canvas"/>

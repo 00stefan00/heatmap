@@ -1,12 +1,21 @@
-
-Left_Button {
-    position: relative;
-    top: -0px;
-    right: -0px;
+html {
+    height: 100%
 }
-
-Right_Button {
-    position: relative;
-    top: 0px;
-    right: 10px;
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0
+}
+#map-canvas {
+    height: 100%;¡
+    width: 100%
+}
+#panel {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    margin-left: -180px;
+    z-index: 5;
+    background-color: transparent;
+    padding: 5px;
 }
