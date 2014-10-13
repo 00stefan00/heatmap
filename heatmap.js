@@ -33,11 +33,9 @@ function initialize() {
 }
 
 function heatMapInit(){    
+    console.log("init");
     heatMapData = []
 
-    if (heatmap != undefined) {
-        heatmap.setMap(null);
-    }
     if(map.getBounds() != undefined){
         mapBounds.latitudeLow = map.getBounds().va.j;
         mapBounds.latitudeHigh = map.getBounds().va.k;
@@ -51,29 +49,23 @@ function heatMapInit(){
 
     pointArray = new google.maps.MVCArray(heatMapData);
 
-    heatmap = new google.maps.visualization.HeatmapLayer({
-        data: pointArray
-    });
+    if (heatmap == undefined) {
+        console.log("new map");
+        heatmap = new google.maps.visualization.HeatmapLayer({
+            data: pointArray
+        });
+        heatmap.setMap(map);
+    }
+    else{
+        heatmap.setData(pointArray);
+    }
 
-    heatmap.setMap(map);
     if(heatMapSettings.radius == null){
         heatMapSettings.radius = (document.getElementById("radiusSlider").value)*1
     }
     heatmap.set('radius', heatMapSettings.radius);
+    
 }
-
-function check_bounds(){
-        var ok = true;
-
-        if (map.getBounds() === undefined)
-            ok = false;
-
-        if (! ok) 
-            setTimeout(check_bounds, 100);
-        else {
-             return
-        }   
-    }
 
 function generateHeatMapData(json) {
     var median = getMedian(json);
@@ -140,6 +132,10 @@ function changeGradient() {
 function changeRadius(r) {
       heatmap.set('radius', r*1);
       heatMapSettings.radius = r*1;
+}
+
+function loopIt() {
+   setInterval(function(){heatMapInit()}, 1000);    
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
