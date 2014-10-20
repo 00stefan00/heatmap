@@ -11,7 +11,11 @@ var mapBounds = {
     longitudeHigh: null,
     latitudeLow: null,
     latitudeHigh: null
-}
+};
+var view = "Normal";
+var dataArray = [];
+var loop = 0;
+var loopin = false;
 
 function initialize() {
     var hoogeveen = new google.maps.LatLng(52.73400225036641, 6.47296751087904);
@@ -24,6 +28,29 @@ function initialize() {
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
 
+    dataArray.push(triggers_0); 
+    dataArray.push(triggers_1); 
+    dataArray.push(triggers_2);
+    dataArray.push(triggers_3);
+    dataArray.push(triggers_4);
+    dataArray.push(triggers_5);
+    dataArray.push(triggers_6);
+    dataArray.push(triggers_7);
+    dataArray.push(triggers_8);
+    dataArray.push(triggers_9);
+    dataArray.push(triggers_10);
+    dataArray.push(triggers_11);
+    dataArray.push(triggers_12);
+    dataArray.push(triggers_13);
+    dataArray.push(triggers_14);
+    dataArray.push(triggers_15);
+    dataArray.push(triggers_16);
+    dataArray.push(triggers_17);
+    dataArray.push(triggers_18);
+    dataArray.push(triggers_19);
+    dataArray.push(triggers_20);
+    dataArray.push(triggers_21);
+    dataArray.push(triggers_22);
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     google.maps.event.addListener(map, 'dragend', mapViewChanged);
@@ -32,8 +59,7 @@ function initialize() {
     // heatMapInit();
 }
 
-function heatMapInit(){    
-    console.log("init");
+function heatMapInit(){
     heatMapData = []
 
     if(map.getBounds() != undefined){
@@ -43,14 +69,11 @@ function heatMapInit(){
         mapBounds.longitudeHigh = map.getBounds().Ea.j;
     }
 
-    generateHeatMapData(triggers_nijmegen);
-    generateHeatMapData(triggers_hoogeveen);
-    generateHeatMapData(triggers_hoogkerk);
+    generateHeatMapData()
 
     pointArray = new google.maps.MVCArray(heatMapData);
 
     if (heatmap == undefined) {
-        console.log("new map");
         heatmap = new google.maps.visualization.HeatmapLayer({
             data: pointArray
         });
@@ -63,16 +86,32 @@ function heatMapInit(){
     if(heatMapSettings.radius == null){
         heatMapSettings.radius = (document.getElementById("radiusSlider").value)*1
     }
-    heatmap.set('radius', heatMapSettings.radius);
-    
+    heatmap.set('radius', heatMapSettings.radius);    
 }
 
-function generateHeatMapData(json) {
+function generateHeatMapData(){
+        console.log(loop);
+    
+    if(view == "Normal"){
+        //addHeatmapData(triggers_nijmegen);
+        addHeatmapData(triggers_hoogeveen);
+        //addHeatmapData(triggers_hoogkerk);
+    }
+    if(view == "Loop"){
+        if (dataArray[loop] == undefined){
+            loopIt();
+            loop = 0;
+            return
+        }
+        addHeatmapData(dataArray[loop]);
+    }
+}
+
+function addHeatmapData(json) {
     var median = getMedian(json);
-
-    for (i = 0; i < json.length-1; i++){
-          //  console.log(mapBounds.longitudeLow + " < " + json[i].lon + " < " + mapBounds.longitudeHigh + " && " + mapBounds.latitudeLow  + " < " + json[i].lon + " < " + mapBounds.latitudeHigh)
-
+    // https://blogs.oracle.com/greimer/entry/best_way_to_code_a
+    var i = json.length-1
+    while(i--){
         if(!((mapBounds.longitudeLow < json[i].lon && json[i].lon < mapBounds.longitudeHigh) && (mapBounds.latitudeLow < json[i].lat && json[i].lat < mapBounds.latitudeHigh))){
             
             continue;
@@ -135,7 +174,23 @@ function changeRadius(r) {
 }
 
 function loopIt() {
-   setInterval(function(){heatMapInit()}, 1000);    
+    if(loopin){
+        loopin = false;
+        window.clearInterval(interval);
+    }else{
+        loopin = true;
+        interval = setInterval(function () {playData()}, 2500);
+    }
+        
+}
+
+function playData() {
+    var oldView = view;
+    view = "Loop";  
+    
+    loop += 1;
+    heatMapInit();
+    view = oldView;  
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
