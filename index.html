@@ -1,10 +1,9 @@
-<data!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <link rel="stylesheet" type="text/css" href="\\stylesheets\\heatmap.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets\heatmap.css">
     
-    <script src="file://C:\\Users\\Stefan Strijker\\workspace\\javascript\\heatmap\\data\\jsondata.json"></script>
+    <script src="data\jsondata.json"></script>
 
 
     <script type="text/javascript"
@@ -17,9 +16,8 @@
 <body>
     <div id="panel">
       <button onclick="toggleHeatmap()">Show/Hide Heatmap</button>
-      <button onclick="loopIt()">Loopit</button>
-<!--      <button onclick="increaseRadius()">Increase Intensity</button> -->
-<!--      <button onclick="decreaseRadius()">Decrease Intensity</button> -->
+      <button onclick="changeGradient()">Change Gradient</button>
+
       <input type="range" id="radiusSlider" onchange="changeRadius(radiusSlider.value)"  min="5" max="100" step="5" value="25">
     </div>
 

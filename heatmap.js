@@ -24,39 +24,16 @@ function initialize() {
 
     var mapOptions = {
         zoom: 10,
-        center: hoogkerk,
+        center: hoogeveen,
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
 
-    dataArray.push(triggers_0); 
-    dataArray.push(triggers_1); 
-    dataArray.push(triggers_2);
-    dataArray.push(triggers_3);
-    dataArray.push(triggers_4);
-    dataArray.push(triggers_5);
-    dataArray.push(triggers_6);
-    dataArray.push(triggers_7);
-    dataArray.push(triggers_8);
-    dataArray.push(triggers_9);
-    dataArray.push(triggers_10);
-    dataArray.push(triggers_11);
-    dataArray.push(triggers_12);
-    dataArray.push(triggers_13);
-    dataArray.push(triggers_14);
-    dataArray.push(triggers_15);
-    dataArray.push(triggers_16);
-    dataArray.push(triggers_17);
-    dataArray.push(triggers_18);
-    dataArray.push(triggers_19);
-    dataArray.push(triggers_20);
-    dataArray.push(triggers_21);
-    dataArray.push(triggers_22);
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     google.maps.event.addListener(map, 'dragend', mapViewChanged);
     google.maps.event.addListener(map, 'zoom_changed', mapViewChanged);
 
-    // heatMapInit();
+    heatMapInit();
 }
 
 function heatMapInit(){
@@ -86,33 +63,19 @@ function heatMapInit(){
     if(heatMapSettings.radius == null){
         heatMapSettings.radius = (document.getElementById("radiusSlider").value)*1
     }
-    heatmap.set('radius', heatMapSettings.radius);    
+    heatmap.set('radius', heatMapSettings.radius);   
+    heatmap.set('maxIntensity', getMedian(triggers_jsondata)*10) 
 }
 
 function generateHeatMapData(){    
-    if(view == "Normal"){
-        //addHeatmapData(triggers_nijmegen);
-        addHeatmapData(triggers_hoogeveen);
-        //addHeatmapData(triggers_hoogkerk);
-    }
-    if(view == "Loop"){
-        if (dataArray[loop] == undefined){
-            loopIt();
-            loop = 0;
-            return
-        }
-        addHeatmapData(dataArray[loop]);
-    }
+    addHeatmapData(triggers_jsondata);
 }
 
 function addHeatmapData(json) {
-    //heatmap.set('maxIntensity', getMedian(json))
-    // https://blogs.oracle.com/greimer/entry/best_way_to_code_a
 
     var i = json.length-1
     while(i--){
         if(!((mapBounds.longitudeLow < json[i].lon && json[i].lon < mapBounds.longitudeHigh) && (mapBounds.latitudeLow < json[i].lat && json[i].lat < mapBounds.latitudeHigh))){
-            
             continue;
         }
         longitude = json[i].lat;
@@ -167,27 +130,6 @@ function changeGradient() {
 function changeRadius(r) {
       heatmap.set('radius', r*1);
       heatMapSettings.radius = r*1;
-}
-
-function loopIt() {
-    if(loopin){
-        loopin = false;
-        window.clearInterval(interval);
-    }else{
-        loopin = true;
-        interval = setInterval(function () {playData()}, 2500);
-    }
-        
-}
-
-function playData() {
-    var oldView = view;
-    view = "Loop";  
-    
-    loop += 1;
-    heatMapInit();
-    document.write();
-    view = oldView;  
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

@@ -19,3 +19,6 @@ body {
     background-color: transparent;
     padding: 5px;
 }
+input#radiusSlider {
+    height: 5;
+}
