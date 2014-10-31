@@ -24,7 +24,7 @@ function initialize() {
 
     var mapOptions = {
         zoom: 10,
-        center: hoogeveen,
+        center: hoogkerk,
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
 
@@ -89,9 +89,7 @@ function heatMapInit(){
     heatmap.set('radius', heatMapSettings.radius);    
 }
 
-function generateHeatMapData(){
-        console.log(loop);
-    
+function generateHeatMapData(){    
     if(view == "Normal"){
         //addHeatmapData(triggers_nijmegen);
         addHeatmapData(triggers_hoogeveen);
@@ -108,8 +106,9 @@ function generateHeatMapData(){
 }
 
 function addHeatmapData(json) {
-    var median = getMedian(json);
+    //heatmap.set('maxIntensity', getMedian(json))
     // https://blogs.oracle.com/greimer/entry/best_way_to_code_a
+
     var i = json.length-1
     while(i--){
         if(!((mapBounds.longitudeLow < json[i].lon && json[i].lon < mapBounds.longitudeHigh) && (mapBounds.latitudeLow < json[i].lat && json[i].lat < mapBounds.latitudeHigh))){
@@ -119,10 +118,7 @@ function addHeatmapData(json) {
         longitude = json[i].lat;
         latitude = json[i].lon;
         triggers_per_hour = json[i].triggers;
-        if(triggers_per_hour > median*7) {
-            triggers_per_hour = median*7;
-        }
-
+        
         var dataObject = {
             location: new google.maps.LatLng(latitude, longitude), 
             weight: triggers_per_hour
@@ -190,6 +186,7 @@ function playData() {
     
     loop += 1;
     heatMapInit();
+    document.write();
     view = oldView;  
 }
 
