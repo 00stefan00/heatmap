@@ -8,10 +8,11 @@ db = client.tvilight_production
 info_bases = db.info_bases
 node_bases = db.node_bases
 
-d_start = datetime.datetime(2014, 9, 29, 0, 0)
-d_end = datetime.datetime(2014, 9, 29, 0, 59)
+d_start = datetime.datetime(2014, 10, 10, 0, 0)
+d_end = datetime.datetime(2014, 10, 10, 0, 59)
 
-box = [[6.0, 52.0], [7.0, 53.0]]
+# box = [[6.0, 52.0], [7.0, 53.0]]
+box = [[0.0, 60.0], [0.0, 60.0]]
 
 looper = 0
 
